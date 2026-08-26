@@ -1,0 +1,9 @@
+import type { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: 'com.sirela.app',
+  appName: 'SIRELA',
+  webDir: 'www'
+};
+
+export default config;

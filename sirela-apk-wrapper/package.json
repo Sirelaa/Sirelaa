@@ -1,0 +1,17 @@
+{
+  "name": "sirela-apk-wrapper",
+  "version": "1.0.0",
+  "description": "Pembungkus SIRELA jadi APK Android pakai Capacitor",
+  "private": true,
+  "scripts": {
+    "sync": "npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/cli": "^6.2.1",
+    "@capacitor/core": "^6.2.1"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIRELA — Sistem Informasi Ruang dan Jadwal</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2563eb">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ AUTH: LOGIN ============ -->
+  <section id="view-login" class="view">
+    <div class="auth-hero">
+      <div class="auth-logo">🔒</div>
+      <h1>SIRELA</h1>
+      <p>Sistem Informasi Ruang dan Jadwal</p>
+    </div>
+    <div class="auth-card">
+      <h2>Masuk ke akun Anda</h2>
+      <p class="sub">Kelola data ruangan dan jadwal sekolah.</p>
+
+      <form id="form-login">
+        <div class="field" id="login-username-field">
+          <label>Nama pengguna</label>
+          <input type="text" id="login-username" placeholder="Masukkan nama pengguna" autocomplete="username">
+          <div class="error-text">Nama pengguna wajib diisi</div>
+        </div>
+        <div class="field" id="login-password-field">
+          <label>Kata sandi</label>
+          <div class="input-wrap">
+            <input type="password" id="login-password" placeholder="Masukkan kata sandi" autocomplete="current-password">
+          </div>
+          <div class="error-text">Kata sandi wajib diisi</div>
+        </div>
+
+        <label class="checkbox-line" style="margin-bottom:20px;">
+          <input type="checkbox" id="login-show-pass">
+          <span class="box"></span>
+          Tampilkan sandi
+        </label>
+
+        <button type="submit" class="btn btn-navy">Masuk</button>
+      </form>
+
+      <div class="divider-or">atau</div>
+      <button class="sso-btn" id="btn-sso">
+        <span class="g-icon"></span> Masuk dengan Google
+      </button>
+
+      <p class="auth-footnote">Butuh bantuan? Hubungi admin IT sekolah</p>
+
+      <div class="auth-switch">
+        <p>Belum punya akun?</p>
+        <a id="link-to-register">Daftar akun baru</a>
+      </div>
+    </div>
+    <div class="version-tag">SIRELA v1.0, Tahun ajaran 2025/2026</div>
+  </section>
+
+  <!-- ============ AUTH: REGISTER ============ -->
+  <section id="view-register" class="view hidden">
+    <div class="auth-hero compact">
+      <div class="auth-logo" style="width:44px;height:44px;font-size:18px;">🔒</div>
+      <h1 style="font-size:16px;">SIRELA</h1>
+      <p>Sistem Informasi Ruang dan Jadwal</p>
+    </div>
+    <div class="auth-card">
+      <h2>Daftar akun baru</h2>
+      <p class="sub">Buat akun untuk mengelola SIRELA.</p>
+
+      <form id="form-register">
+        <div class="field">
+          <label>Nama lengkap</label>
+          <input type="text" id="reg-name" placeholder="Masukkan nama lengkap">
+        </div>
+        <div class="field">
+          <label>Nama pengguna</label>
+          <input type="text" id="reg-username" placeholder="Buat nama pengguna">
+        </div>
+        <div class="field">
+          <label>Email sekolah</label>
+          <input type="email" id="reg-email" placeholder="nama@sekolah.sch.id">
+        </div>
+        <div class="field">
+          <label>Kata sandi</label>
+          <div class="input-wrap">
+            <input type="password" id="reg-password" placeholder="Buat kata sandi">
+          </div>
+        </div>
+        <div class="field">
+          <label>Konfirmasi kata sandi</label>
+          <div class="input-wrap">
+            <input type="password" id="reg-password2" placeholder="Ulangi kata sandi">
+          </div>
+          <div class="error-text" id="reg-pass-error">Kata sandi tidak sama</div>
+        </div>
+
+        <label class="checkbox-line" style="margin-bottom:20px;">
+          <input type="checkbox" id="reg-show-pass">
+          <span class="box"></span>
+          Tampilkan sandi
+        </label>
+
+        <button type="submit" class="btn btn-navy">Daftar</button>
+      </form>
+
+      <div class="auth-switch">
+        <p>Sudah punya akun?</p>
+        <a id="link-to-login">Masuk ke akun Anda</a>
+      </div>
+    </div>
+    <div class="version-tag">SIRELA v1.0, Tahun ajaran 2025/2026</div>
+  </section>
+
+  <!-- ============ MAIN APP SHELL ============ -->
+  <section id="view-app" class="view hidden">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger"><span></span><span></span><span></span></button>
+        <div>
+          <p class="topbar-title" id="topbar-title">SIRELA</p>
+          <p class="topbar-sub" id="topbar-sub">Sistem Informasi Ruang dan Jadwal</p>
+        </div>
+      </div>
+      <button class="bell">🔔<span class="dot"></span></button>
+    </div>
+
+    <div class="page">
+      <!-- ---- DASHBOARD ---- -->
+      <div class="page-content" id="page-dashboard">
+        <div class="welcome">
+          <h2>Selamat datang!</h2>
+          <p>Kelola data ruangan, jurusan, dan jadwal dengan mudah.</p>
+          <p class="datetime" id="dash-datetime"></p>
+        </div>
+
+        <div class="stat-card stat-navy">
+          <span class="label">TOTAL RUANGAN</span>
+          <span class="value" id="stat-total">0</span>
+        </div>
+        <div class="stat-card stat-red">
+          <span class="label">RUANGAN TERPAKAI</span>
+          <span class="value" id="stat-terpakai">0</span>
+        </div>
+        <div class="stat-card stat-green">
+          <span class="label">RUANGAN KOSONG</span>
+          <span class="value" id="stat-kosong">0</span>
+        </div>
+
+        <div class="panel">
+          <input type="text" class="search-input" id="dash-search" placeholder="Cari ruangan...">
+          <button class="btn btn-navy btn-sm" id="btn-cari">Cari</button>
+          <div class="stack-gap">
+            <button class="btn btn-orange btn-sm" id="btn-kelola-jurusan">Kelola jurusan</button>
+          </div>
+          <div class="btn-grid2">
+            <button class="btn btn-purple btn-sm" id="btn-tambah-ruangan">+ Tambah ruangan</button>
+            <button class="btn btn-green btn-sm" id="btn-tambah-jadwal">+ Tambah jadwal</button>
+          </div>
+          <div class="btn-grid2">
+            <button class="btn btn-ghost btn-sm" id="btn-kelola-kelas" style="background:var(--orange-light);color:var(--orange-text);">Kelola kelas</button>
+            <button class="btn btn-ghost btn-sm" id="btn-kelola-ruangan" style="background:var(--red-light);color:var(--red);">Kelola ruangan</button>
+          </div>
+
+          <hr class="modal-hr" style="margin-top:16px;">
+          <div id="dash-room-list"></div>
+          <p class="footnote" id="dash-footnote"></p>
+        </div>
+      </div>
+
+      <!-- ---- DATA RUANGAN ---- -->
+      <div class="page-content hidden" id="page-ruangan">
+        <div class="list-card">
+          <h4>DAFTAR RUANGAN</h4>
+          <hr>
+          <div id="ruangan-list"></div>
+          <p class="footnote" id="ruangan-footnote"></p>
+        </div>
+      </div>
+
+      <!-- ---- JADWAL ---- -->
+      <div class="page-content hidden" id="page-jadwal">
+        <div class="list-card">
+          <div class="day-tabs" id="day-tabs"></div>
+          <hr style="margin-bottom:6px;">
+          <div id="jadwal-list"></div>
+        </div>
+      </div>
+
+      <!-- ---- JURUSAN ---- -->
+      <div class="page-content hidden" id="page-jurusan">
+        <div class="jurusan-grid" id="jurusan-grid"></div>
+      </div>
+
+      <!-- ---- PENGATURAN ---- -->
+      <div class="page-content hidden" id="page-pengaturan">
+        <div class="profile-card">
+          <div class="avatar" id="profile-avatar">AS</div>
+          <div class="profile-info">
+            <p class="pname" id="profile-name">Admin SIRELA</p>
+            <p class="pemail" id="profile-email">admin@sirela.sch.id</p>
+            <span class="badge badge-blue" style="margin-top:6px;">Administrator</span>
+          </div>
+        </div>
+
+        <p class="settings-heading">UMUM</p>
+        <div class="settings-list">
+          <div class="settings-row">
+            <span>Notifikasi</span>
+            <label class="switch">
+              <input type="checkbox" id="setting-notif" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="settings-row">
+            <span>Mode gelap</span>
+            <label class="switch">
+              <input type="checkbox" id="setting-dark">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="settings-row">
+            <span>Bahasa</span>
+            <span class="settings-value">Indonesia</span>
+          </div>
+          <div class="settings-row clickable" id="row-ubah-sandi">
+            <span>Ubah kata sandi</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="settings-row">
+            <span>Tahun ajaran aktif</span>
+            <span class="settings-value">2025/2026</span>
+          </div>
+        </div>
+
+        <button class="btn btn-outline-red" id="btn-keluar-akun">Keluar akun</button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </section>
+
+  <!-- ============ DRAWER MENU ============ -->
+  <div id="drawer-root"></div>
+
+  <!-- ============ MODAL ROOT ============ -->
+  <div id="modal-root"></div>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch((err) => {
+        console.warn("Service worker gagal didaftarkan:", err);
+      });
+    });
+  }
+</script>
+</body>
+</html>
