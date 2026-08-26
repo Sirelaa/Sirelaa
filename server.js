@@ -12,7 +12,7 @@
    const PUBLIC_DIR = path.join(__dirname, "public");
    
    // 🛠️ UBAH JADI TRUE KALAU MAU MAINTENANCE, FALSE KALAU NORMAL
-   const IS_MAINTENANCE = false;
+   const IS_MAINTENANCE = true;
    
    const MIME = {
      ".html": "text/html; charset=utf-8",
