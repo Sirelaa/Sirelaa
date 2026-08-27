@@ -92,10 +92,17 @@
        }
    
        if (pathname === "/api/auth/login" && method === "POST") {
-         const { username, password } = await readBody(req);
-         const user = await DB.findUserByUsername((username || "").trim());
-         if (!user || (password || "") !== user.password) {
-           return sendJSON(res, 401, { error: "Nama pengguna atau kata sandi salah" });
+         const { email, password } = await readBody(req);
+         const cleanEmail = (email || "").trim();
+         if (!cleanEmail || !password) {
+           return sendJSON(res, 400, { error: "Email dan kata sandi wajib diisi" });
+         }
+         const user = await DB.findUserByEmail(cleanEmail);
+         if (!user) {
+           return sendJSON(res, 404, { error: "Email belum terdaftar" });
+         }
+         if ((password || "") !== user.password) {
+           return sendJSON(res, 401, { error: "Kata sandi salah" });
          }
          const token = await DB.createSession(user.id);
          return sendJSON(res, 200, { token, user: DB.publicUser(user) });
@@ -108,6 +115,9 @@
          }
          if (await DB.findUserByUsername(username.trim())) {
            return sendJSON(res, 409, { error: "Nama pengguna sudah digunakan" });
+         }
+         if (await DB.findUserByEmail(email.trim())) {
+           return sendJSON(res, 409, { error: "Email sudah digunakan" });
          }
          const user = await DB.createUser({ name: name.trim(), username: username.trim(), email: email.trim(), password });
          const token = await DB.createSession(user.id);
