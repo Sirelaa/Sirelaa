@@ -137,6 +137,13 @@ document.getElementById("form-login").addEventListener("submit", async (e)=>{
   }
 });
 
+document.getElementById("reg-username").addEventListener("input", ()=>{
+  document.getElementById("reg-username-field").classList.remove("error");
+});
+document.getElementById("reg-email").addEventListener("input", ()=>{
+  document.getElementById("reg-email-field").classList.remove("error");
+});
+
 document.getElementById("form-register").addEventListener("submit", async (e)=>{
   e.preventDefault();
   const name = document.getElementById("reg-name").value.trim();
@@ -157,8 +164,8 @@ document.getElementById("form-register").addEventListener("submit", async (e)=>{
     return;
   }
 
-  const usernameField = document.getElementById("reg-username").closest(".field");
-  const emailField = document.getElementById("reg-email").closest(".field");
+  const usernameField = document.getElementById("reg-username-field");
+  const emailField = document.getElementById("reg-email-field");
   usernameField.classList.remove("error");
   emailField.classList.remove("error");
 
@@ -169,8 +176,14 @@ document.getElementById("form-register").addEventListener("submit", async (e)=>{
     await goApp();
   }catch(err){
     if(err.status === 409){
-      if(/pengguna/i.test(err.message)) usernameField.classList.add("error");
-      if(/email/i.test(err.message)) emailField.classList.add("error");
+      if(/pengguna/i.test(err.message)){
+        usernameField.classList.add("error");
+        document.getElementById("reg-username-error").textContent = err.message;
+      }
+      if(/email/i.test(err.message)){
+        emailField.classList.add("error");
+        document.getElementById("reg-email-error").textContent = err.message;
+      }
     }
     showToast(err.message);
   }
