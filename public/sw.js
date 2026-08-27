@@ -1,7 +1,4 @@
 // SIRELA - Service Worker
-// Tujuan: bikin app bisa di-install sebagai PWA & buka lebih cepat.
-// Data (lewat /api/...) SELALU diambil langsung dari server (tidak di-cache),
-// supaya jadwal/ruangan yang ditampilkan selalu yang terbaru.
 const CACHE_NAME = "sirela-shell-v2";
 const SHELL_FILES = [
   "/",
@@ -30,11 +27,9 @@ self.addEventListener("activate", (event) => {
 });
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  // Jangan cache panggilan API sama sekali — selalu ambil langsung dari server.
   if (url.pathname.startsWith("/api/")) {
     return;
   }
-  // Untuk file shell (html/css/js/ikon): coba cache dulu, fallback ke network.
   event.respondWith(
     caches.match(event.request).then((cached) => {
       return (
