@@ -1,5 +1,5 @@
 // SIRELA - Service Worker
-const CACHE_NAME = "sirela-shell-v2";
+const CACHE_NAME = "sirela-shell-v3";
 const SHELL_FILES = [
   "/",
   "/index.html",
