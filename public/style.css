@@ -65,8 +65,9 @@ body{
   width:24px;height:24px;
   display:flex;flex-direction:column;justify-content:center;gap:5px;
   cursor:pointer; background:none; border:none; padding:0;
+  flex-shrink:0;
 }
-.hamburger span{ display:block; height:1.5px; background:#fff; }
+.hamburger span{ display:block; width:100%; height:2px; background:#fff; border-radius:2px; }
 .topbar-title{
   color:#fff; font-size:16px; font-weight:700; margin:0;
 }
