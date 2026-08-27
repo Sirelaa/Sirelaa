@@ -3,7 +3,7 @@
 // Data (lewat /api/...) SELALU diambil langsung dari server (tidak di-cache),
 // supaya jadwal/ruangan yang ditampilkan selalu yang terbaru.
 
-const CACHE_NAME = "sirela-shell-v5";
+const CACHE_NAME = "sirela-shell-v6";
 const SHELL_FILES = [
   "/",
   "/index.html",
