@@ -44,7 +44,8 @@ let STATE = {
 };
 
 async function refreshState(){
-  STATE = await api("/bootstrap");
+  const data = await api("/bootstrap");
+  STATE = { ...data, currentUser: data.user };
 }
 
 function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2,9); }
@@ -91,6 +92,16 @@ document.getElementById("btn-sso").addEventListener("click", async ()=>{
 document.getElementById("login-show-pass").addEventListener("change", (e)=>{
   document.getElementById("login-password").type = e.target.checked ? "text" : "password";
 });
+function setLoginEmailError(msg){
+  const field = document.getElementById("login-email-field");
+  const errEl = document.getElementById("login-email-error");
+  if(msg){
+    field.classList.add("error");
+    if(errEl) errEl.textContent = msg;
+  } else {
+    field.classList.remove("error");
+  }
+}
 document.getElementById("reg-show-pass").addEventListener("change", (e)=>{
   const type = e.target.checked ? "text" : "password";
   document.getElementById("reg-password").type = type;
@@ -99,20 +110,29 @@ document.getElementById("reg-show-pass").addEventListener("change", (e)=>{
 
 document.getElementById("form-login").addEventListener("submit", async (e)=>{
   e.preventDefault();
-  const uField = document.getElementById("login-username-field");
   const pField = document.getElementById("login-password-field");
-  const username = document.getElementById("login-username").value.trim();
+  const email = document.getElementById("login-email").value.trim();
   const password = document.getElementById("login-password").value;
 
-  uField.classList.toggle("error", !username);
+  setLoginEmailError(!email ? "Email wajib diisi" : "");
   pField.classList.toggle("error", !password);
-  if(!username || !password) return;
+  if(!email || !password) return;
 
   try{
-    const { token } = await api("/auth/login", { method:"POST", body:{ username, password } });
+    const { token } = await api("/auth/login", { method:"POST", body:{ email, password } });
     setToken(token);
     await goApp();
   }catch(err){
+    // Tandai kolom yang relevan sesuai jenis error dari server
+    if(err.status === 404){
+      setLoginEmailError(err.message);
+    } else if(err.status === 401){
+      setLoginEmailError("");
+      pField.classList.add("error");
+    } else {
+      setLoginEmailError("");
+      pField.classList.remove("error");
+    }
     showToast(err.message);
   }
 });
@@ -137,12 +157,21 @@ document.getElementById("form-register").addEventListener("submit", async (e)=>{
     return;
   }
 
+  const usernameField = document.getElementById("reg-username").closest(".field");
+  const emailField = document.getElementById("reg-email").closest(".field");
+  usernameField.classList.remove("error");
+  emailField.classList.remove("error");
+
   try{
     const { token } = await api("/auth/register", { method:"POST", body:{ name, username, email, password } });
     setToken(token);
     showToast("Akun berhasil dibuat");
     await goApp();
   }catch(err){
+    if(err.status === 409){
+      if(/pengguna/i.test(err.message)) usernameField.classList.add("error");
+      if(/email/i.test(err.message)) emailField.classList.add("error");
+    }
     showToast(err.message);
   }
 });
@@ -270,7 +299,7 @@ async function submitKeluarAkun(){
   setToken(null);
   STATE.currentUser = null;
   closeModal();
-  document.getElementById("login-username").value = "";
+  document.getElementById("login-email").value = "";
   document.getElementById("login-password").value = "";
   showView("view-login");
 }
